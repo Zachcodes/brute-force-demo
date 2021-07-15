@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="login-form">
+        <label for="fname">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="lname">Password:</label>
+        <input type="text" id="password" name="password"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+  </body>
+  <script>
+    function submitForm(e) {
+        e.preventDefault();
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        var data = new FormData();
+        data.append('username', username.value);
+        data.append('password', password.value);
+
+        const http = new XMLHttpRequest();
+        var url = `/api/login?username=${username.value}&password=${password.value}`;
+        http.open('POST', url);
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.onreadystatechange = function () {
+          // In local files, status is 0 upon success in Mozilla Firefox
+          if(http.readyState === XMLHttpRequest.DONE) {
+            var status = http.status;
+            if (status === 0 || (status >= 200 && status < 400)) {
+              // The request has been completed successfully
+              alert(http.responseText)
+            } else {
+              // Oh no! There has been an error with the request!
+            }
+          }
+        };
+        http.send(data);
+    }
+    const myForm = document.getElementById('login-form');
+    myForm.onsubmit = submitForm;
+</script>
+</html>
